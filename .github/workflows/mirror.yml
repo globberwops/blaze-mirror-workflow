@@ -1,0 +1,17 @@
+name: Mirror
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "12 3 * * *"
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone bare
+        run: |
+          git clone --bare https://bitbucket.org/blaze-lib/blaze.git blaze_upstream
+      - name: Push mirror
+        run: |
+          git -C blaze_upstream push --mirror \
+            https://${{ github.actor }}:${{ secrets.BLAZE_MIRROR_WORKFLOW }}@github.com/globberwops/blaze.git
